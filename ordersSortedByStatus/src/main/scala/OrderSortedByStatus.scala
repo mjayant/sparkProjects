@@ -39,7 +39,16 @@ object OrderSortedByStatus {
 
     // composite key soeting
     val keydata = file_obj.map(rec=> ((rec.split(",")(3), format.parse(rec.split(",")(1))),( rec.split(",")(0),rec.split(",")(2))))
-    val a1 = keydata.sortByKey()
+    //asc order
+    // val a1 = keydata.sortByKey()
+    // Both in desc order
+    val a1 = keydata.sortByKey(false)
+    // status in asc and date in desc
+    //  val keydata = file_obj.map(rec=> ((rec.split(",")(3), -format.parse(rec.split(",")(1))),( rec.split(",")(0),rec.split(",")(2))))
+    // val a1 = keydata.sortByKey()
+    // status in desc and date in asc order
+    // val keydata = file_obj.map(-rec=> ((rec.split(",")(3), format.parse(rec.split(",")(1))),( rec.split(",")(0),rec.split(",")(2))))
+    // val a1 = keydata.sortByKey()
     a1.saveAsTextFile(output_path)
 
     sc.stop()

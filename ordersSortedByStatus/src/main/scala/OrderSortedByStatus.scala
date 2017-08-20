@@ -18,7 +18,7 @@ object OrderSortedByStatus {
     val fs = FileSystem.get(sc.hadoopConfiguration)
     val input_path = args(0)
     val output_path = args(1)
-
+    val format = new java.text.SimpleDateFormat("yyyy-MM-dd")
     val is_input_path_exist = fs.exists( new Path(input_path))
     val is_output_path_exist = fs.exists(new Path(output_path))
 
@@ -31,10 +31,17 @@ object OrderSortedByStatus {
         fs.delete(new Path(output_path), true)
       }
 
-    val file_obj = sc.textFile(input_path)
-    val keydata = file_obj.map(rec=> (rec.split(",")(3),( rec.split(",")(0),rec.split(",")(1),rec.split(",")(2))))
-    val sortdata = keydata.sortByKey()
-    sortdata.saveAsTextFile(output_path)
+      val file_obj = sc.textFile(input_path)
+//    val keydata = file_obj.map(rec=> (rec.split(",")(3),( rec.split(",")(0),rec.split(",")(1),rec.split(",")(2))))
+//    val sortdata = keydata.sortByKey()
+//    sortdata.saveAsTextFile(output_path)
+
+
+    // composite key soeting
+    val keydata = file_obj.map(rec=> ((rec.split(",")(3), format.parse(rec.split(",")(1))),( rec.split(",")(0),rec.split(",")(2))))
+    val a1 = keydata.sortByKey()
+    a1.saveAsTextFile(output_path)
+
     sc.stop()
 
   }
